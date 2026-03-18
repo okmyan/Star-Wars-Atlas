@@ -1,0 +1,17 @@
+query People($first: Int, $after: String) {
+    allPeople(first: $first, after: $after) {
+        people {
+            id
+            name
+            filmConnection {
+                films {
+                    id
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+    }
+}

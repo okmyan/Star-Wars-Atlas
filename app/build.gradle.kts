@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.apollo)
 }
 
 android {
@@ -47,6 +48,12 @@ kotlin {
     }
 }
 
+apollo {
+    service("service") {
+        packageName.set("com.okmyan.starwarsatlas.graphql")
+    }
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -61,6 +68,8 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.apollo.runtime)
 
     testImplementation(libs.junit)
 
