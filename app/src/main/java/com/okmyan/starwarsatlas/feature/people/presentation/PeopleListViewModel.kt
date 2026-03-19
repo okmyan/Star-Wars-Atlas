@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.okmyan.starwarsatlas.feature.people.data.PeopleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineName
+import timber.log.Timber
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,8 @@ class PeopleListViewModel @Inject constructor(
 
     fun loadPeople() {
         viewModelScope.launch(CoroutineName("PeopleListViewModel - loadPeople")) {
+            Timber.d("Requesting people list")
+
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 errorMessage = null,
@@ -33,12 +36,14 @@ class PeopleListViewModel @Inject constructor(
             runCatching {
                 peopleRepository.getPeople()
             }.onSuccess { people ->
+                Timber.d("People list loaded: ${people.size} items")
                 _uiState.value = PeopleListState(
                     isLoading = false,
                     items = people,
                     errorMessage = null,
                 )
             }.onFailure { throwable ->
+                Timber.e(throwable, "Failed to load people list")
                 _uiState.value = PeopleListState(
                     isLoading = false,
                     items = emptyList(),

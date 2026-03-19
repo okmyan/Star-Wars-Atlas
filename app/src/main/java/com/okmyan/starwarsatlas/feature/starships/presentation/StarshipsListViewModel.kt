@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.okmyan.starwarsatlas.feature.starships.data.StarshipsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineName
+import timber.log.Timber
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,8 @@ class StarshipsListViewModel @Inject constructor(
 
     fun loadStarships() {
         viewModelScope.launch(CoroutineName("StarshipsListViewModel - loadStarships")) {
+            Timber.d("Requesting starships list")
+
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 errorMessage = null,
@@ -33,12 +36,14 @@ class StarshipsListViewModel @Inject constructor(
             runCatching {
                 starshipsRepository.getStarships()
             }.onSuccess { starships ->
+                Timber.d("Starships list loaded: ${starships.size} items")
                 _uiState.value = StarshipsListState(
                     isLoading = false,
                     items = starships,
                     errorMessage = null,
                 )
             }.onFailure { throwable ->
+                Timber.e(throwable, "Failed to load starships list")
                 _uiState.value = StarshipsListState(
                     isLoading = false,
                     items = emptyList(),

@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.apollo.runtime)
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
 
