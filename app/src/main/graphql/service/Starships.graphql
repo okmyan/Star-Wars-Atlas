@@ -1,0 +1,17 @@
+query Starships($first: Int, $after: String) {
+    allStarships(first: $first, after: $after) {
+        starships {
+            id
+            name
+            filmConnection {
+                films {
+                    id
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+    }
+}
