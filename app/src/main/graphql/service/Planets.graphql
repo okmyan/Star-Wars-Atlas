@@ -1,0 +1,17 @@
+query Planets($first: Int, $after: String) {
+    allPlanets(first: $first, after: $after) {
+        planets {
+            id
+            name
+            filmConnection {
+                films {
+                    id
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+    }
+}

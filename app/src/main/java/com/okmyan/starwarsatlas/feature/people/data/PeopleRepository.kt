@@ -9,6 +9,7 @@ import javax.inject.Inject
 class PeopleRepository @Inject constructor(
     private val apolloClient: ApolloClient,
 ) {
+    
     suspend fun getPeople(): List<PersonListItem> {
         val response = apolloClient.query(
             PeopleQuery(
@@ -34,4 +35,5 @@ class PeopleRepository @Inject constructor(
                 )
             }
     }
+
 }
