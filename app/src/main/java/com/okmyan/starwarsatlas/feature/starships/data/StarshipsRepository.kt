@@ -18,9 +18,9 @@ class StarshipsRepository @Inject constructor(
             )
         ).execute()
 
-        val data = requireNotNull(response.data) {
-            "StarshipsQuery returned null data. Errors: ${response.errors}"
-        }
+        response.exception?.let { throw it }
+        val data =
+            response.data ?: error("StarshipsQuery returned null data. Errors: ${response.errors}")
 
         return data.allStarships?.starships
             .orEmpty()

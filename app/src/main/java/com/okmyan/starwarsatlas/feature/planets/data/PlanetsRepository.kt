@@ -18,9 +18,9 @@ class PlanetsRepository @Inject constructor(
             )
         ).execute()
 
-        val data = requireNotNull(response.data) {
-            "PlanetsQuery returned null data. Errors: ${response.errors}"
-        }
+        response.exception?.let { throw it }
+        val data =
+            response.data ?: error("PlanetsQuery returned null data. Errors: ${response.errors}")
 
         return data.allPlanets?.planets
             .orEmpty()

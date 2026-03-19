@@ -9,7 +9,7 @@ import javax.inject.Inject
 class PeopleRepository @Inject constructor(
     private val apolloClient: ApolloClient,
 ) {
-    
+
     suspend fun getPeople(): List<PersonListItem> {
         val response = apolloClient.query(
             PeopleQuery(
@@ -18,9 +18,9 @@ class PeopleRepository @Inject constructor(
             )
         ).execute()
 
-        val data = requireNotNull(response.data) {
-            "PeopleQuery returned null data. Errors: ${response.errors}"
-        }
+        response.exception?.let { throw it }
+        val data =
+            response.data ?: error("PeopleQuery returned null data. Errors: ${response.errors}")
 
         return data.allPeople?.people
             .orEmpty()
