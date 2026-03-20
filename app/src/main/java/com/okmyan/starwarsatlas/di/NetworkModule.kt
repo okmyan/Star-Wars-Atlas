@@ -1,9 +1,12 @@
 package com.okmyan.starwarsatlas.di
 
+import android.content.Context
 import com.apollographql.apollo.ApolloClient
+import com.okmyan.starwarsatlas.core.network.ApolloClientFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -13,10 +16,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApolloClient(): ApolloClient {
-        return ApolloClient.Builder()
-            .serverUrl("https://swapi-graphql.eskerda.vercel.app/")
-            .build()
-    }
+    fun provideApolloClient(@ApplicationContext context: Context): ApolloClient =
+        ApolloClientFactory.create(context)
 
 }
