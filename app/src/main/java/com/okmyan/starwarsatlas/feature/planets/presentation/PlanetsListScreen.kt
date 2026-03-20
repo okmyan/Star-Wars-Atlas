@@ -22,7 +22,7 @@ import com.okmyan.starwarsatlas.feature.planets.domain.PlanetListItem
 fun PlanetsListScreen(
     viewModel: PlanetsListViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     PlanetsListContent(uiState = uiState, onRetry = viewModel::loadPlanets)
 }
 
@@ -67,6 +67,7 @@ private fun PlanetsListContentPreview() {
     StarWarsAtlasTheme {
         PlanetsListContent(
             uiState = PlanetsListState(
+                isLoading = false,
                 items = listOf(
                     PlanetListItem(id = "1", name = "Tatooine", filmCount = 7),
                     PlanetListItem(id = "2", name = "Alderaan", filmCount = 2),

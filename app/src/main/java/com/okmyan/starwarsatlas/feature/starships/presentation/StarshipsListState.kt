@@ -4,7 +4,7 @@ import com.okmyan.starwarsatlas.core.model.DataError
 import com.okmyan.starwarsatlas.feature.starships.domain.StarshipListItem
 
 data class StarshipsListState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val items: List<StarshipListItem> = emptyList(),
     val error: DataError? = null,
 )

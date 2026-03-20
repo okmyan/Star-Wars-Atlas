@@ -22,7 +22,7 @@ import com.okmyan.starwarsatlas.feature.people.domain.PersonListItem
 fun PeopleListScreen(
     viewModel: PeopleListViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     PeopleListContent(uiState = uiState, onRetry = viewModel::loadPeople)
 }
 
@@ -67,6 +67,7 @@ private fun PeopleListContentPreview() {
     StarWarsAtlasTheme {
         PeopleListContent(
             uiState = PeopleListState(
+                isLoading = false,
                 items = listOf(
                     PersonListItem(id = "1", name = "Luke Skywalker", filmCount = 7),
                     PersonListItem(id = "2", name = "Darth Vader", filmCount = 7),

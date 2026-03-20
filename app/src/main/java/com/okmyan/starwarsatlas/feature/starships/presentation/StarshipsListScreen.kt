@@ -22,7 +22,7 @@ import com.okmyan.starwarsatlas.feature.starships.domain.StarshipListItem
 fun StarshipsListScreen(
     viewModel: StarshipsListViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     StarshipsListContent(uiState = uiState, onRetry = viewModel::loadStarships)
 }
 
@@ -67,6 +67,7 @@ private fun StarshipsListContentPreview() {
     StarWarsAtlasTheme {
         StarshipsListContent(
             uiState = StarshipsListState(
+                isLoading = false,
                 items = listOf(
                     StarshipListItem(id = "1", name = "Millennium Falcon", filmCount = 8),
                     StarshipListItem(id = "2", name = "X-wing", filmCount = 8),

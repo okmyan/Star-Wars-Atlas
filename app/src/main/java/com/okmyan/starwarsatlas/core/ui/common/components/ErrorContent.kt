@@ -9,7 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.okmyan.starwarsatlas.R
 import com.okmyan.starwarsatlas.core.model.DataError
 
 @Composable
@@ -18,12 +20,11 @@ fun ErrorContent(
     onRetry: () -> Unit,
 ) {
     val errorMessage = when (error) {
-        is DataError.NoInternetConnection -> "No internet connection"
-        is DataError.Timeout -> "Request timed out. Please try again"
+        is DataError.NoInternetConnection -> stringResource(R.string.error_no_internet)
+        is DataError.Timeout -> stringResource(R.string.error_timeout)
         is DataError.GraphQl -> error.message
-        is DataError.Unknown -> "Something went wrong. Please try again"
+        is DataError.Unknown -> stringResource(R.string.error_generic)
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +36,7 @@ fun ErrorContent(
             style = MaterialTheme.typography.bodyLarge,
         )
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text(stringResource(R.string.retry))
         }
     }
 }

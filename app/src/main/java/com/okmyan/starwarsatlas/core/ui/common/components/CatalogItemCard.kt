@@ -9,7 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.okmyan.starwarsatlas.R
 
 @Composable
 fun CatalogItemCard(
@@ -28,7 +30,7 @@ fun CatalogItemCard(
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = "Films: $filmCount",
+                text = stringResource(R.string.films_count, filmCount),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

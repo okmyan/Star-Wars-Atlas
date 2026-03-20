@@ -4,7 +4,7 @@ import com.okmyan.starwarsatlas.core.model.DataError
 import com.okmyan.starwarsatlas.feature.planets.domain.PlanetListItem
 
 data class PlanetsListState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val items: List<PlanetListItem> = emptyList(),
     val error: DataError? = null,
 )
