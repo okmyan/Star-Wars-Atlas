@@ -1,59 +1,45 @@
 package com.okmyan.starwarsatlas.feature.people.presentation
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.okmyan.starwarsatlas.core.ui.common.components.CatalogItemCard
+import com.okmyan.starwarsatlas.core.ui.common.components.ErrorContent
+import com.okmyan.starwarsatlas.core.ui.common.components.Loading
+import com.okmyan.starwarsatlas.core.ui.theme.StarWarsAtlasTheme
+import com.okmyan.starwarsatlas.feature.people.domain.PersonListItem
 
 @Composable
 fun PeopleListScreen(
     viewModel: PeopleListViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    PeopleListContent(uiState = uiState, onRetry = viewModel::loadPeople)
+}
+
+@Composable
+private fun PeopleListContent(
+    uiState: PeopleListState,
+    onRetry: () -> Unit,
+) {
+    val error = uiState.error
 
     when {
-        uiState.isLoading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-        }
+        uiState.isLoading -> Loading()
 
-        uiState.errorMessage != null -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Text(
-                    text = uiState.errorMessage.orEmpty(),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Button(onClick = viewModel::loadPeople) {
-                    Text("Retry")
-                }
-            }
-        }
+        error != null -> ErrorContent(
+            error = error,
+            onRetry = onRetry,
+        )
 
         else -> {
             LazyColumn(
@@ -65,7 +51,7 @@ fun PeopleListScreen(
                     items = uiState.items,
                     key = { it.id },
                 ) { person ->
-                    PersonListItemCard(
+                    CatalogItemCard(
                         name = person.name,
                         filmCount = person.filmCount,
                     )
@@ -75,26 +61,19 @@ fun PeopleListScreen(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-private fun PersonListItemCard(
-    name: String,
-    filmCount: Int,
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Text(
-                text = name,
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Text(
-                text = "Films: $filmCount",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
+private fun PeopleListContentPreview() {
+    StarWarsAtlasTheme {
+        PeopleListContent(
+            uiState = PeopleListState(
+                items = listOf(
+                    PersonListItem(id = "1", name = "Luke Skywalker", filmCount = 7),
+                    PersonListItem(id = "2", name = "Darth Vader", filmCount = 7),
+                    PersonListItem(id = "3", name = "Leia Organa", filmCount = 8),
+                ),
+            ),
+            onRetry = {},
+        )
     }
 }

@@ -66,7 +66,7 @@ fun StarWarsAtlasRoot() {
 }
 
 @Composable
-fun NavControllerLogger(navController: NavController) {
+private fun NavControllerLogger(navController: NavController) {
     DisposableEffect(navController) {
         var previousRoute = "none"
         val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
