@@ -1,0 +1,20 @@
+query PersonDetails($id: ID!) {
+    person(id: $id) {
+        name
+        birthYear
+        gender
+        height
+        mass
+        eyeColor
+        hairColor
+        skinColor
+        homeworld {
+            name
+        }
+        filmConnection {
+            films {
+                title
+            }
+        }
+    }
+}

@@ -9,6 +9,7 @@ import com.okmyan.starwarsatlas.core.ui.common.components.CatalogPagingScreen
 @Composable
 fun PlanetsListScreen(
     viewModel: PlanetsListViewModel = hiltViewModel(),
+    onPlanetClick: (String) -> Unit = {},
 ) {
     val pagingItems = viewModel.items.collectAsLazyPagingItems()
 
@@ -19,6 +20,7 @@ fun PlanetsListScreen(
         CatalogItemCard(
             name = planet.name,
             filmCount = planet.filmCount,
+            onClick = { onPlanetClick(planet.id) },
         )
     }
 }

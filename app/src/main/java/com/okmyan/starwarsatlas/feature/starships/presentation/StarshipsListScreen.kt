@@ -9,6 +9,7 @@ import com.okmyan.starwarsatlas.core.ui.common.components.CatalogPagingScreen
 @Composable
 fun StarshipsListScreen(
     viewModel: StarshipsListViewModel = hiltViewModel(),
+    onStarshipClick: (String) -> Unit = {},
 ) {
     val pagingItems = viewModel.items.collectAsLazyPagingItems()
 
@@ -19,6 +20,7 @@ fun StarshipsListScreen(
         CatalogItemCard(
             name = starship.name,
             filmCount = starship.filmCount,
+            onClick = { onStarshipClick(starship.id) },
         )
     }
 }

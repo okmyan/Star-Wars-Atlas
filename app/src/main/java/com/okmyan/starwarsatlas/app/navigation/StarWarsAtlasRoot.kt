@@ -12,6 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import timber.log.Timber
@@ -20,7 +23,6 @@ import timber.log.Timber
 fun StarWarsAtlasRoot() {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route
 
     NavControllerLogger(navController)
 
@@ -34,11 +36,14 @@ fun StarWarsAtlasRoot() {
         bottomBar = {
             NavigationBar {
                 destinations.forEach { destination ->
+                    val selected = backStackEntry?.destination?.hierarchy
+                        ?.any { it.hasRoute(destination.graph::class) } == true
+
                     NavigationBarItem(
-                        selected = currentRoute == destination.route,
+                        selected = selected,
                         onClick = {
-                            navController.navigate(destination.route) {
-                                popUpTo(navController.graph.startDestinationId) {
+                            navController.navigate(destination.graph) {
+                                popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
                                 launchSingleTop = true

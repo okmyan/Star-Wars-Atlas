@@ -9,6 +9,23 @@
     <!-- Catalog item -->
     <string name="films_count">Films: %d</string>
 
+    <!--  Details  -->
+    <string name="detail_not_applicable">n/a</string>
+
+    <!-- Person details -->
+    <string name="person_details_back">Back</string>
+    <string name="person_details_birth_year">Birth year</string>
+    <string name="person_details_gender">Gender</string>
+    <string name="person_details_height">Height</string>
+    <string name="person_details_height_value">%d cm</string>
+    <string name="person_details_mass">Mass</string>
+    <string name="person_details_mass_value">%.1f kg</string>
+    <string name="person_details_eye_color">Eye color</string>
+    <string name="person_details_hair_color">Hair color</string>
+    <string name="person_details_skin_color">Skin color</string>
+    <string name="person_details_homeworld">Homeworld</string>
+    <string name="person_details_films">Films</string>
+
     <!-- Errors -->
     <string name="error_no_internet">No internet connection</string>
     <string name="error_timeout">Request timed out. Please try again</string>

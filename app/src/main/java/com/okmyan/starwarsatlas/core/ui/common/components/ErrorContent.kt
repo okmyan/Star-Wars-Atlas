@@ -23,7 +23,8 @@ fun ErrorContent(
     val errorMessage = when (error) {
         is DataError.NoInternetConnection -> stringResource(R.string.error_no_internet)
         is DataError.Timeout -> stringResource(R.string.error_timeout)
-        is DataError.GraphQl -> error.message
+
+        is DataError.GraphQl,
         is DataError.Unknown -> stringResource(R.string.error_generic)
     }
     Column(
