@@ -8,25 +8,25 @@ import androidx.compose.material.icons.outlined.Rocket
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.okmyan.starwarsatlas.R
 
-sealed class TopLevelDestination(
-    val route: String,
+sealed class TopLevelDestination<T : Any>(
+    val graph: T,
     @StringRes val labelRes: Int,
     val icon: ImageVector,
 ) {
-    data object People : TopLevelDestination(
-        route = "people",
+    data object People : TopLevelDestination<PeopleGraph>(
+        graph = PeopleGraph,
         labelRes = R.string.nav_people,
         icon = Icons.Outlined.Groups,
     )
 
-    data object Starships : TopLevelDestination(
-        route = "starships",
+    data object Starships : TopLevelDestination<StarshipsGraph>(
+        graph = StarshipsGraph,
         labelRes = R.string.nav_starships,
         icon = Icons.Outlined.Rocket,
     )
 
-    data object Planets : TopLevelDestination(
-        route = "planets",
+    data object Planets : TopLevelDestination<PlanetsGraph>(
+        graph = PlanetsGraph,
         labelRes = R.string.nav_planets,
         icon = Icons.Outlined.Language,
     )

@@ -9,6 +9,60 @@
     <!-- Catalog item -->
     <string name="films_count">Films: %d</string>
 
+    <!--  Details  -->
+    <string name="detail_not_applicable">n/a</string>
+    <string name="details_back">Back</string>
+    <string name="details_films">Films</string>
+
+    <!-- Person details -->
+    <string name="person_details_birth_year">Birth year</string>
+    <string name="person_details_gender">Gender</string>
+    <string name="person_details_height">Height</string>
+    <string name="person_details_height_value">%d cm</string>
+    <string name="person_details_mass">Mass</string>
+    <string name="person_details_mass_value">%.1f kg</string>
+    <string name="person_details_eye_color">Eye color</string>
+    <string name="person_details_hair_color">Hair color</string>
+    <string name="person_details_skin_color">Skin color</string>
+    <string name="person_details_homeworld">Homeworld</string>
+
+    <!-- Starship details -->
+    <string name="starship_details_model">Model</string>
+    <string name="starship_details_class">Class</string>
+    <string name="starship_details_manufacturers">Manufacturers</string>
+    <string name="starship_details_cost">Cost in credits</string>
+    <string name="starship_details_cost_value">%.0f credits</string>
+    <string name="starship_details_length">Length</string>
+    <string name="starship_details_length_value">%.1f m</string>
+    <string name="starship_details_crew">Crew</string>
+    <string name="starship_details_passengers">Passengers</string>
+    <string name="starship_details_max_speed">Max atmospheric speed</string>
+    <string name="starship_details_max_speed_value">%d km/h</string>
+    <string name="starship_details_hyperdrive_rating">Hyperdrive rating</string>
+    <string name="starship_details_hyperdrive_rating_value">%.1f</string>
+    <string name="starship_details_mglt">MGLT</string>
+    <string name="starship_details_mglt_value">%d MGLT</string>
+    <string name="starship_details_cargo_capacity">Cargo capacity</string>
+    <string name="starship_details_cargo_capacity_value">%.0f kg</string>
+    <string name="starship_details_consumables">Consumables</string>
+    <string name="starship_details_pilots">Pilots</string>
+
+    <!-- Planet details -->
+    <string name="planet_details_diameter">Diameter</string>
+    <string name="planet_details_diameter_value">%d km</string>
+    <string name="planet_details_rotation_period">Rotation period</string>
+    <string name="planet_details_rotation_period_value">%d hours</string>
+    <string name="planet_details_orbital_period">Orbital period</string>
+    <string name="planet_details_orbital_period_value">%d days</string>
+    <string name="planet_details_gravity">Gravity</string>
+    <string name="planet_details_population">Population</string>
+    <string name="planet_details_population_value">%.0f</string>
+    <string name="planet_details_climates">Climates</string>
+    <string name="planet_details_terrains">Terrains</string>
+    <string name="planet_details_surface_water">Surface water</string>
+    <string name="planet_details_surface_water_value">%.1f%%</string>
+    <string name="planet_details_residents">Residents</string>
+
     <!-- Errors -->
     <string name="error_no_internet">No internet connection</string>
     <string name="error_timeout">Request timed out. Please try again</string>

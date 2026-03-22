@@ -9,6 +9,7 @@ import com.okmyan.starwarsatlas.core.ui.common.components.CatalogPagingScreen
 @Composable
 fun PeopleListScreen(
     viewModel: PeopleListViewModel = hiltViewModel(),
+    onPersonClick: (String) -> Unit,
 ) {
     val pagingItems = viewModel.items.collectAsLazyPagingItems()
 
@@ -18,7 +19,8 @@ fun PeopleListScreen(
     ) { person ->
         CatalogItemCard(
             name = person.name,
-            filmCount = person.filmCount
+            filmCount = person.filmCount,
+            onClick = { onPersonClick(person.id) },
         )
     }
 }

@@ -17,8 +17,10 @@ import com.okmyan.starwarsatlas.R
 fun CatalogItemCard(
     name: String,
     filmCount: Int,
+    onClick: () -> Unit = {},
 ) {
     Card(
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
