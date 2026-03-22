@@ -1,52 +1,21 @@
 package com.okmyan.starwarsatlas.feature.planets.presentation
 
-import com.okmyan.starwarsatlas.core.model.Outcome
-import com.okmyan.starwarsatlas.core.presentation.BaseViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.okmyan.starwarsatlas.feature.planets.data.PlanetsRepository
+import com.okmyan.starwarsatlas.feature.planets.domain.PlanetListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class PlanetsListViewModel @Inject constructor(
-    private val planetsRepository: PlanetsRepository,
-) : BaseViewModel<PlanetsListState>(PlanetsListState()) {
+    planetsRepository: PlanetsRepository,
+) : ViewModel() {
 
-    init {
-        loadPlanets()
-    }
+    val items: Flow<PagingData<PlanetListItem>> = planetsRepository.getPlanets()
+        .cachedIn(viewModelScope)
 
-    fun loadPlanets() {
-        scope.launch(CoroutineName("PlanetsListViewModel - loadPlanets")) {
-            Timber.d("Requesting planets list")
-            updateState {
-                copy(isLoading = true, error = null)
-            }
-
-            when (val outcome = planetsRepository.getPlanets()) {
-                is Outcome.Success -> {
-                    Timber.d("Planets list loaded: ${outcome.value.size} items")
-                    updateState {
-                        copy(
-                            isLoading = false,
-                            items = outcome.value,
-                        )
-                    }
-                }
-
-                is Outcome.Failure -> {
-                    Timber.e("Failed to load planets list: ${outcome.error}")
-                    updateState {
-                        copy(
-                            isLoading = false,
-                            items = emptyList(),
-                            error = outcome.error,
-                        )
-                    }
-                }
-            }
-        }
-    }
 }

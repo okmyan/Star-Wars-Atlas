@@ -18,6 +18,7 @@ import com.okmyan.starwarsatlas.core.model.DataError
 fun ErrorContent(
     error: DataError,
     onRetry: () -> Unit,
+    modifier: Modifier = Modifier.fillMaxSize(),
 ) {
     val errorMessage = when (error) {
         is DataError.NoInternetConnection -> stringResource(R.string.error_no_internet)
@@ -26,9 +27,7 @@ fun ErrorContent(
         is DataError.Unknown -> stringResource(R.string.error_generic)
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
+        modifier = modifier.padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
