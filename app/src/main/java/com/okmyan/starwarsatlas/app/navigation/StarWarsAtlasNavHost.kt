@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.okmyan.starwarsatlas.feature.people.presentation.PeopleListScreen
 import com.okmyan.starwarsatlas.feature.people.presentation.PersonDetailsScreen
+import com.okmyan.starwarsatlas.feature.planets.presentation.PlanetDetailsScreen
 import com.okmyan.starwarsatlas.feature.planets.presentation.PlanetsListScreen
 import com.okmyan.starwarsatlas.feature.starships.presentation.StarshipDetailsScreen
 import com.okmyan.starwarsatlas.feature.starships.presentation.StarshipsListScreen
@@ -56,7 +57,15 @@ fun StarWarsAtlasNavHost(
         navigation<PlanetsGraph>(startDestination = PlanetsList) {
             composable<PlanetsList> {
                 BackHandler { navController.navigateBackToPeople() }
-                PlanetsListScreen()
+                PlanetsListScreen(
+                    onPlanetClick = { id -> navController.navigate(PlanetDetails(id)) },
+                )
+            }
+
+            composable<PlanetDetails> {
+                PlanetDetailsScreen(
+                    onBack = { navController.popBackStack() },
+                )
             }
         }
     }

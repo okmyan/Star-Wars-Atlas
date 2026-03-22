@@ -25,3 +25,6 @@ data class PersonDetails(val personId: String)
 
 @Serializable
 data class StarshipDetails(val starshipId: String)
+
+@Serializable
+data class PlanetDetails(val planetId: String)

@@ -1,0 +1,23 @@
+query PlanetDetails($id: ID!) {
+    planet(id: $id) {
+        name
+        diameter
+        rotationPeriod
+        orbitalPeriod
+        gravity
+        population
+        climates
+        terrains
+        surfaceWater
+        residentConnection {
+            residents {
+                name
+            }
+        }
+        filmConnection {
+            films {
+                title
+            }
+        }
+    }
+}

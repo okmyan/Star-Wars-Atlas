@@ -47,6 +47,22 @@
     <string name="starship_details_consumables">Consumables</string>
     <string name="starship_details_pilots">Pilots</string>
 
+    <!-- Planet details -->
+    <string name="planet_details_diameter">Diameter</string>
+    <string name="planet_details_diameter_value">%d km</string>
+    <string name="planet_details_rotation_period">Rotation period</string>
+    <string name="planet_details_rotation_period_value">%d hours</string>
+    <string name="planet_details_orbital_period">Orbital period</string>
+    <string name="planet_details_orbital_period_value">%d days</string>
+    <string name="planet_details_gravity">Gravity</string>
+    <string name="planet_details_population">Population</string>
+    <string name="planet_details_population_value">%.0f</string>
+    <string name="planet_details_climates">Climates</string>
+    <string name="planet_details_terrains">Terrains</string>
+    <string name="planet_details_surface_water">Surface water</string>
+    <string name="planet_details_surface_water_value">%.1f%%</string>
+    <string name="planet_details_residents">Residents</string>
+
     <!-- Errors -->
     <string name="error_no_internet">No internet connection</string>
     <string name="error_timeout">Request timed out. Please try again</string>
