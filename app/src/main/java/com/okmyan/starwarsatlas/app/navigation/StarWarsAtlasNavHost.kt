@@ -11,6 +11,7 @@ import androidx.navigation.navigation
 import com.okmyan.starwarsatlas.feature.people.presentation.PeopleListScreen
 import com.okmyan.starwarsatlas.feature.people.presentation.PersonDetailsScreen
 import com.okmyan.starwarsatlas.feature.planets.presentation.PlanetsListScreen
+import com.okmyan.starwarsatlas.feature.starships.presentation.StarshipDetailsScreen
 import com.okmyan.starwarsatlas.feature.starships.presentation.StarshipsListScreen
 
 @Composable
@@ -39,11 +40,16 @@ fun StarWarsAtlasNavHost(
 
         navigation<StarshipsGraph>(startDestination = StarshipsList) {
             composable<StarshipsList> {
-                // This BackHandler is registered inside NavHost, so it has higher priority than
-                // NavHost's own back handler. Pressing back restores the People graph state
-                // including any detail screen that was open before switching tabs.
                 BackHandler { navController.navigateBackToPeople() }
-                StarshipsListScreen()
+                StarshipsListScreen(
+                    onStarshipClick = { id -> navController.navigate(StarshipDetails(id)) },
+                )
+            }
+
+            composable<StarshipDetails> {
+                StarshipDetailsScreen(
+                    onBack = { navController.popBackStack() },
+                )
             }
         }
 
@@ -56,6 +62,11 @@ fun StarWarsAtlasNavHost(
     }
 }
 
+/**
+ * Registered inside NavHost so it has higher priority than NavHost's own back handler.
+ * Pressing back restores the [PeopleGraph] state including any detail screen that was open before
+ * switching tabs.
+ */
 private fun NavHostController.navigateBackToPeople() {
     navigate(PeopleGraph) {
         popUpTo(graph.findStartDestination().id) { saveState = true }

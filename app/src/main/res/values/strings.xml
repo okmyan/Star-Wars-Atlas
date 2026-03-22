@@ -11,9 +11,10 @@
 
     <!--  Details  -->
     <string name="detail_not_applicable">n/a</string>
+    <string name="details_back">Back</string>
+    <string name="details_films">Films</string>
 
     <!-- Person details -->
-    <string name="person_details_back">Back</string>
     <string name="person_details_birth_year">Birth year</string>
     <string name="person_details_gender">Gender</string>
     <string name="person_details_height">Height</string>
@@ -24,7 +25,27 @@
     <string name="person_details_hair_color">Hair color</string>
     <string name="person_details_skin_color">Skin color</string>
     <string name="person_details_homeworld">Homeworld</string>
-    <string name="person_details_films">Films</string>
+
+    <!-- Starship details -->
+    <string name="starship_details_model">Model</string>
+    <string name="starship_details_class">Class</string>
+    <string name="starship_details_manufacturers">Manufacturers</string>
+    <string name="starship_details_cost">Cost in credits</string>
+    <string name="starship_details_cost_value">%.0f credits</string>
+    <string name="starship_details_length">Length</string>
+    <string name="starship_details_length_value">%.1f m</string>
+    <string name="starship_details_crew">Crew</string>
+    <string name="starship_details_passengers">Passengers</string>
+    <string name="starship_details_max_speed">Max atmospheric speed</string>
+    <string name="starship_details_max_speed_value">%d km/h</string>
+    <string name="starship_details_hyperdrive_rating">Hyperdrive rating</string>
+    <string name="starship_details_hyperdrive_rating_value">%.1f</string>
+    <string name="starship_details_mglt">MGLT</string>
+    <string name="starship_details_mglt_value">%d MGLT</string>
+    <string name="starship_details_cargo_capacity">Cargo capacity</string>
+    <string name="starship_details_cargo_capacity_value">%.0f kg</string>
+    <string name="starship_details_consumables">Consumables</string>
+    <string name="starship_details_pilots">Pilots</string>
 
     <!-- Errors -->
     <string name="error_no_internet">No internet connection</string>
