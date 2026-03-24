@@ -25,7 +25,7 @@ import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipsDao
         PlanetRemoteKeyEntity::class,
     ],
     version = 1,
-    exportSchema = false,
+    exportSchema = true,
 )
 abstract class StarWarsAtlasDatabase : RoomDatabase() {
 
@@ -57,6 +57,7 @@ abstract class StarWarsAtlasDatabase : RoomDatabase() {
                 StarWarsAtlasDatabase::class.java,
                 DATABASE_NAME
             )
+                .fallbackToDestructiveMigration(false)
                 .build()
     }
 

@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.okmyan.starwarsatlas.R
 import com.okmyan.starwarsatlas.core.ui.common.components.DetailRow
@@ -152,6 +152,7 @@ private fun StarshipDetailsContent(starship: StarshipDetails) {
             DetailRow(
                 label = stringResource(R.string.details_films),
                 value = starship.films.takeIf { it.isNotEmpty() }?.joinToString("\n"),
+                showDivider = false,
             )
         }
     }

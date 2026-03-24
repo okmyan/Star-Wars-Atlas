@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.okmyan.starwarsatlas.app.navigation.PlanetDetails
 import com.okmyan.starwarsatlas.core.model.Outcome
-import com.okmyan.starwarsatlas.core.presentation.BaseViewModel
+import com.okmyan.starwarsatlas.core.presentation.StatefulBaseViewModel
 import com.okmyan.starwarsatlas.feature.planets.data.PlanetsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineName
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class PlanetDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: PlanetsRepository,
-) : BaseViewModel<PlanetDetailsState>(PlanetDetailsState.Loading) {
+) : StatefulBaseViewModel<PlanetDetailsState>(PlanetDetailsState.Loading) {
 
     private val planetId: String = savedStateHandle.toRoute<PlanetDetails>().planetId
 

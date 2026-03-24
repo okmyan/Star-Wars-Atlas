@@ -17,6 +17,7 @@ import com.okmyan.starwarsatlas.R
 fun DetailRow(
     label: String,
     value: String?,
+    showDivider: Boolean = true,
 ) {
     Column(
         modifier = Modifier
@@ -34,5 +35,8 @@ fun DetailRow(
             style = MaterialTheme.typography.bodyLarge,
         )
     }
-    HorizontalDivider()
+
+    if (showDivider) {
+        HorizontalDivider()
+    }
 }

@@ -17,7 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.okmyan.starwarsatlas.R
 import com.okmyan.starwarsatlas.core.ui.common.components.DetailRow
@@ -39,26 +39,27 @@ fun PersonDetailsScreen(
             DetailsTopBar(
                 name = (uiState as? PersonDetailsState.Success)?.person?.name,
                 onBack = onBack,
-                actions = {
-                    IconToggleButton(
-                        checked = isFavorite,
-                        onCheckedChange = { viewModel.toggleFavorite() },
-                        enabled = uiState is PersonDetailsState.Success,
-                    ) {
-                        if (isFavorite) {
-                            Icon(
-                                imageVector = Icons.Filled.Star,
-                                contentDescription = stringResource(R.string.remove_from_favorites),
-                                tint = MaterialTheme.colorScheme.secondary,
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Outlined.StarOutline,
-                                contentDescription = stringResource(R.string.add_to_favorites),
-                            )
+                actions = if (uiState is PersonDetailsState.Success) {
+                    {
+                        IconToggleButton(
+                            checked = isFavorite,
+                            onCheckedChange = { viewModel.toggleFavorite() },
+                        ) {
+                            if (isFavorite) {
+                                Icon(
+                                    imageVector = Icons.Filled.Star,
+                                    contentDescription = stringResource(R.string.remove_from_favorites),
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarOutline,
+                                    contentDescription = stringResource(R.string.add_to_favorites),
+                                )
+                            }
                         }
                     }
-                },
+                } else null,
             )
         },
     ) { innerPadding ->
@@ -142,6 +143,7 @@ private fun PersonDetailsContent(person: PersonDetails) {
             DetailRow(
                 label = stringResource(R.string.details_films),
                 value = person.films.takeIf { it.isNotEmpty() }?.joinToString("\n"),
+                showDivider = false,
             )
         }
     }
