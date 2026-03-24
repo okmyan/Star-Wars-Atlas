@@ -1,55 +1,33 @@
 package com.okmyan.starwarsatlas.feature.people.data
 
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadType
-import androidx.paging.PagingState
-import androidx.paging.RemoteMediator
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.okmyan.starwarsatlas.core.datastore.LastRefreshDataStore
+import com.okmyan.starwarsatlas.core.paging.CursorPage
+import com.okmyan.starwarsatlas.core.paging.CursorRemoteMediator
+import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
+import com.okmyan.starwarsatlas.feature.people.data.database.PeopleRemoteKeyEntity
+import com.okmyan.starwarsatlas.feature.people.data.database.PersonEntity
 import com.okmyan.starwarsatlas.graphql.PeopleQuery
-import com.okmyan.starwarsatlas.utils.mediatorResultOf
 import com.okmyan.starwarsatlas.utils.requireData
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class PeopleRemoteMediator(
     private val apolloClient: ApolloClient,
     private val peopleDao: PeopleDao,
-    private val lastRefreshDao: PeopleLastRefreshDao,
-) : RemoteMediator<Int, PersonEntity>() {
+    lastRefreshDataStore: LastRefreshDataStore,
+) : CursorRemoteMediator<PersonEntity>(lastRefreshDataStore, FEATURE_KEY) {
 
-    override suspend fun initialize(): InitializeAction {
-        val lastRefresh = lastRefreshDao.lastRefresh()?.timestamp
-            ?: return InitializeAction.LAUNCH_INITIAL_REFRESH
+    override suspend fun getCount() = peopleDao.count()
 
-        return if (System.currentTimeMillis() - lastRefresh < CACHE_TIMEOUT) {
-            InitializeAction.SKIP_INITIAL_REFRESH
-        } else {
-            InitializeAction.LAUNCH_INITIAL_REFRESH
-        }
-    }
+    override suspend fun getNextCursor(lastItem: PersonEntity) =
+        peopleDao.remoteKeyById(lastItem.id)?.nextCursor
 
-    override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, PersonEntity>,
-    ): MediatorResult = mediatorResultOf {
-        val cursor: String? = when (loadType) {
-            LoadType.REFRESH -> null
-
-            LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-
-            LoadType.APPEND -> {
-                val lastItem = state.lastItemOrNull()
-                    ?: return MediatorResult.Success(endOfPaginationReached = peopleDao.count() == 0)
-
-                peopleDao.remoteKeyById(lastItem.id)?.nextCursor
-                    ?: return MediatorResult.Success(endOfPaginationReached = true)
-            }
-        }
-
+    override suspend fun fetch(pageSize: Int, cursor: String?): CursorPage<PersonEntity> {
         val data = apolloClient.query(
             PeopleQuery(
-                first = Optional.Present(state.config.pageSize),
+                first = Optional.Present(pageSize),
                 after = Optional.presentIfNotNull(cursor),
             )
         ).execute().requireData()
@@ -72,23 +50,16 @@ class PeopleRemoteMediator(
             .takeIf { it.hasNextPage }
             ?.endCursor
 
-        val remoteKeys = people.map {
-            PeopleRemoteKeyEntity(id = it.id, nextCursor = nextCursor)
-        }
-        peopleDao.upsert(
-            people = people,
-            keys = remoteKeys,
-            clearFirst = loadType == LoadType.REFRESH,
-        )
-        if (loadType == LoadType.REFRESH) {
-            lastRefreshDao.upsertLastRefresh(PeopleLastRefreshEntity(timestamp = System.currentTimeMillis()))
-        }
+        return CursorPage(items = people, nextCursor = nextCursor)
+    }
 
-        MediatorResult.Success(endOfPaginationReached = nextCursor == null)
+    override suspend fun save(items: List<PersonEntity>, nextCursor: String?, clearFirst: Boolean) {
+        val remoteKeys = items.map { PeopleRemoteKeyEntity(id = it.id, nextCursor = nextCursor) }
+        peopleDao.upsert(people = items, keys = remoteKeys, clearFirst = clearFirst)
     }
 
     companion object {
-        private val CACHE_TIMEOUT = TimeUnit.HOURS.toMillis(1)
+        private const val FEATURE_KEY = "people"
     }
 
 }

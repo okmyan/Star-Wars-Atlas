@@ -2,8 +2,8 @@ package com.okmyan.starwarsatlas.di
 
 import android.content.Context
 import com.okmyan.starwarsatlas.core.database.StarWarsAtlasDatabase
-import com.okmyan.starwarsatlas.feature.people.data.PeopleDao
-import com.okmyan.starwarsatlas.feature.people.data.PeopleLastRefreshDao
+import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
+import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +24,6 @@ object DatabaseModule {
     fun providePeopleDao(db: StarWarsAtlasDatabase): PeopleDao = db.peopleDao()
 
     @Provides
-    fun providePeopleLastRefreshDao(db: StarWarsAtlasDatabase): PeopleLastRefreshDao =
-        db.peopleLastRefreshDao()
+    fun provideStarshipsDao(db: StarWarsAtlasDatabase): StarshipsDao = db.starshipsDao()
 
 }

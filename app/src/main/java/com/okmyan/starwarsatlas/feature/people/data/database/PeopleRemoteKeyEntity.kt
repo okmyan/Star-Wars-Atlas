@@ -1,4 +1,4 @@
-package com.okmyan.starwarsatlas.feature.people.data
+package com.okmyan.starwarsatlas.feature.people.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

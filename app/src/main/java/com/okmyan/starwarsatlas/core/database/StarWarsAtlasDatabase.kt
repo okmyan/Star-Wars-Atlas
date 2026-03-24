@@ -4,17 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.okmyan.starwarsatlas.feature.people.data.PeopleDao
-import com.okmyan.starwarsatlas.feature.people.data.PeopleLastRefreshDao
-import com.okmyan.starwarsatlas.feature.people.data.PeopleLastRefreshEntity
-import com.okmyan.starwarsatlas.feature.people.data.PeopleRemoteKeyEntity
-import com.okmyan.starwarsatlas.feature.people.data.PersonEntity
+import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
+import com.okmyan.starwarsatlas.feature.people.data.database.PeopleRemoteKeyEntity
+import com.okmyan.starwarsatlas.feature.people.data.database.PersonEntity
+import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipEntity
+import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipRemoteKeyEntity
+import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipsDao
 
 @Database(
     entities = [
         PersonEntity::class,
         PeopleRemoteKeyEntity::class,
-        PeopleLastRefreshEntity::class,
+        StarshipEntity::class,
+        StarshipRemoteKeyEntity::class,
     ],
     version = 1,
     exportSchema = false,
@@ -22,7 +24,8 @@ import com.okmyan.starwarsatlas.feature.people.data.PersonEntity
 abstract class StarWarsAtlasDatabase : RoomDatabase() {
 
     abstract fun peopleDao(): PeopleDao
-    abstract fun peopleLastRefreshDao(): PeopleLastRefreshDao
+
+    abstract fun starshipsDao(): StarshipsDao
 
     companion object {
 
