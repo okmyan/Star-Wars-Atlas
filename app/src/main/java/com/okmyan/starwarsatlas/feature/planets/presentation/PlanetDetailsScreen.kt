@@ -127,6 +127,7 @@ private fun PlanetDetailsContent(planet: PlanetDetails) {
             DetailRow(
                 label = stringResource(R.string.details_films),
                 value = planet.films.takeIf { it.isNotEmpty() }?.joinToString("\n"),
+                showDivider = false,
             )
         }
     }

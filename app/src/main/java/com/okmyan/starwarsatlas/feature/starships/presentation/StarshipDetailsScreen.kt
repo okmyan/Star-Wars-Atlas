@@ -152,6 +152,7 @@ private fun StarshipDetailsContent(starship: StarshipDetails) {
             DetailRow(
                 label = stringResource(R.string.details_films),
                 value = starship.films.takeIf { it.isNotEmpty() }?.joinToString("\n"),
+                showDivider = false,
             )
         }
     }

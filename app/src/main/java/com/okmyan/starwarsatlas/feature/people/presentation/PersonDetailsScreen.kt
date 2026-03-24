@@ -142,6 +142,7 @@ private fun PersonDetailsContent(person: PersonDetails) {
             DetailRow(
                 label = stringResource(R.string.details_films),
                 value = person.films.takeIf { it.isNotEmpty() }?.joinToString("\n"),
+                showDivider = false,
             )
         }
     }
