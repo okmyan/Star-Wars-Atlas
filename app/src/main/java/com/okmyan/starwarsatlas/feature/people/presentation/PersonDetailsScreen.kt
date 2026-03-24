@@ -5,6 +5,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,12 +32,33 @@ fun PersonDetailsScreen(
     onBack: () -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             DetailsTopBar(
                 name = (uiState as? PersonDetailsState.Success)?.person?.name,
                 onBack = onBack,
+                actions = {
+                    IconToggleButton(
+                        checked = isFavorite,
+                        onCheckedChange = { viewModel.toggleFavorite() },
+                        enabled = uiState is PersonDetailsState.Success,
+                    ) {
+                        if (isFavorite) {
+                            Icon(
+                                imageVector = Icons.Filled.Star,
+                                contentDescription = stringResource(R.string.remove_from_favorites),
+                                tint = MaterialTheme.colorScheme.secondary,
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Outlined.StarOutline,
+                                contentDescription = stringResource(R.string.add_to_favorites),
+                            )
+                        }
+                    }
+                },
             )
         },
     ) { innerPadding ->

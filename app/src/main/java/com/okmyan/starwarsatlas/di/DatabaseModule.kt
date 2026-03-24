@@ -2,6 +2,7 @@ package com.okmyan.starwarsatlas.di
 
 import android.content.Context
 import com.okmyan.starwarsatlas.core.database.StarWarsAtlasDatabase
+import com.okmyan.starwarsatlas.feature.people.data.database.FavoritePeopleDao
 import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
 import com.okmyan.starwarsatlas.feature.planets.data.database.PlanetsDao
 import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipsDao
@@ -23,6 +24,10 @@ object DatabaseModule {
 
     @Provides
     fun providePeopleDao(db: StarWarsAtlasDatabase): PeopleDao = db.peopleDao()
+
+    @Provides
+    fun provideFavoritePeopleDao(db: StarWarsAtlasDatabase): FavoritePeopleDao =
+        db.favoritePeopleDao()
 
     @Provides
     fun provideStarshipsDao(db: StarWarsAtlasDatabase): StarshipsDao = db.starshipsDao()

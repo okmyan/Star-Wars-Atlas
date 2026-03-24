@@ -19,6 +19,8 @@ class PeopleRemoteMediator(
     lastRefreshDataStore: LastRefreshDataStore,
 ) : CursorRemoteMediator<PersonEntity>(lastRefreshDataStore, FEATURE_KEY) {
 
+    private var pendingFavoriteIds: Set<String> = emptySet()
+
     override suspend fun getCount() = peopleDao.count()
 
     override suspend fun getNextCursor(lastItem: PersonEntity) =
@@ -55,7 +57,12 @@ class PeopleRemoteMediator(
 
     override suspend fun save(items: List<PersonEntity>, nextCursor: String?, clearFirst: Boolean) {
         val remoteKeys = items.map { PeopleRemoteKeyEntity(id = it.id, nextCursor = nextCursor) }
-        peopleDao.upsert(people = items, keys = remoteKeys, clearFirst = clearFirst)
+        pendingFavoriteIds = peopleDao.upsert(
+            people = items,
+            keys = remoteKeys,
+            clearFirst = clearFirst,
+            pendingFavoriteIds = pendingFavoriteIds,
+        )
     }
 
     companion object {

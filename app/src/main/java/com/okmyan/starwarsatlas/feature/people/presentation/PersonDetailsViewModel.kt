@@ -8,6 +8,9 @@ import com.okmyan.starwarsatlas.core.presentation.BaseViewModel
 import com.okmyan.starwarsatlas.feature.people.data.PeopleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,11 +23,20 @@ class PersonDetailsViewModel @Inject constructor(
 
     private val personId: String = savedStateHandle.toRoute<PersonDetails>().personId
 
+    val isFavorite: StateFlow<Boolean> = repository.observeFavoriteById(personId)
+        .stateIn(scope, SharingStarted.Eagerly, false)
+
     init {
         loadDetails()
     }
 
     fun retry() = loadDetails()
+
+    fun toggleFavorite() {
+        scope.launch(CoroutineName("PersonDetailsViewModel - toggleFavorite")) {
+            repository.toggleFavorite(personId)
+        }
+    }
 
     private fun loadDetails() {
         Timber.d("Loading person details for $personId")
