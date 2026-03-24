@@ -4,9 +4,7 @@ query Planets($first: Int, $after: String) {
             id
             name
             filmConnection {
-                films {
-                    id
-                }
+                totalCount
             }
         }
         pageInfo {
