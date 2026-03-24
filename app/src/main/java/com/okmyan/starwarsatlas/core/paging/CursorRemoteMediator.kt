@@ -6,7 +6,9 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.okmyan.starwarsatlas.core.datastore.LastRefreshDataStore
 import com.okmyan.starwarsatlas.utils.mediatorResultOf
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.cancellation.CancellationException
 
 @OptIn(ExperimentalPagingApi::class)
 abstract class CursorRemoteMediator<Entity : Any>(
@@ -42,7 +44,18 @@ abstract class CursorRemoteMediator<Entity : Any>(
             }
         }
 
-        val page = fetch(pageSize = state.config.pageSize, cursor = cursor)
+        val page = try {
+            fetch(pageSize = state.config.pageSize, cursor = cursor)
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            // Refresh failed but cached data exists. Show it instead of surfacing the error
+            if (loadType == LoadType.REFRESH && getCount() > 0) {
+                Timber.w(e, "[$featureKey] Refresh failed, falling back to cache")
+                return MediatorResult.Success(endOfPaginationReached = false)
+            }
+            throw e
+        }
         save(items = page.items, nextCursor = page.nextCursor, clearFirst = loadType == LoadType.REFRESH)
 
         if (loadType == LoadType.REFRESH) {

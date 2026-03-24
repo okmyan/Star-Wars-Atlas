@@ -3,6 +3,7 @@ package com.okmyan.starwarsatlas.di
 import android.content.Context
 import com.okmyan.starwarsatlas.core.database.StarWarsAtlasDatabase
 import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
+import com.okmyan.starwarsatlas.feature.planets.data.database.PlanetsDao
 import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipsDao
 import dagger.Module
 import dagger.Provides
@@ -25,5 +26,8 @@ object DatabaseModule {
 
     @Provides
     fun provideStarshipsDao(db: StarWarsAtlasDatabase): StarshipsDao = db.starshipsDao()
+
+    @Provides
+    fun providePlanetsDao(db: StarWarsAtlasDatabase): PlanetsDao = db.planetsDao()
 
 }
