@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.okmyan.starwarsatlas.feature.people.data.database.FavoritePeopleDao
 import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
 import com.okmyan.starwarsatlas.feature.people.data.database.PeopleRemoteKeyEntity
 import com.okmyan.starwarsatlas.feature.people.data.database.PersonEntity
@@ -29,6 +30,8 @@ import com.okmyan.starwarsatlas.feature.starships.data.database.StarshipsDao
 abstract class StarWarsAtlasDatabase : RoomDatabase() {
 
     abstract fun peopleDao(): PeopleDao
+
+    abstract fun favoritePeopleDao(): FavoritePeopleDao
 
     abstract fun starshipsDao(): StarshipsDao
 

@@ -1,5 +1,6 @@
 package com.okmyan.starwarsatlas.core.ui.common.components
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +17,7 @@ import com.okmyan.starwarsatlas.R
 fun DetailsTopBar(
     name: String?,
     onBack: () -> Unit,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         title = {
@@ -29,5 +31,6 @@ fun DetailsTopBar(
                 )
             }
         },
+        actions = actions,
     )
 }

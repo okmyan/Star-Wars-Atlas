@@ -8,6 +8,7 @@ import androidx.paging.map
 import com.apollographql.apollo.ApolloClient
 import com.okmyan.starwarsatlas.core.datastore.LastRefreshDataStore
 import com.okmyan.starwarsatlas.core.model.Outcome
+import com.okmyan.starwarsatlas.feature.people.data.database.FavoritePeopleDao
 import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
 import com.okmyan.starwarsatlas.feature.people.domain.PersonDetails
 import com.okmyan.starwarsatlas.feature.people.domain.PersonListItem
@@ -17,11 +18,13 @@ import com.okmyan.starwarsatlas.utils.outcomeOf
 import com.okmyan.starwarsatlas.utils.requireData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class PeopleRepository @Inject constructor(
     private val apolloClient: ApolloClient,
     private val peopleDao: PeopleDao,
+    private val favoritePeopleDao: FavoritePeopleDao,
     private val lastRefreshDataStore: LastRefreshDataStore,
 ) {
 
@@ -38,6 +41,29 @@ class PeopleRepository @Inject constructor(
                 filmCount = entity.filmCount,
             )
         }
+    }
+
+    fun observeFavoritePeople(): Flow<List<PersonListItem>> =
+        favoritePeopleDao.observeFavoritePeople().map { entities ->
+            entities.map { entity ->
+                PersonListItem(
+                    id = entity.id,
+                    name = entity.name,
+                    filmCount = entity.filmCount,
+                    isFavorite = true,
+                )
+            }
+        }
+
+    fun observeFavoriteById(id: String): Flow<Boolean> =
+        favoritePeopleDao.observeFavoriteById(id).map { it ?: false }
+
+    suspend fun toggleFavorite(id: String) {
+        val current = favoritePeopleDao.isFavorite(id) ?: run {
+            Timber.w("toggleFavorite: person with id=$id not found in database")
+            return
+        }
+        favoritePeopleDao.setFavorite(id, !current)
     }
 
     suspend fun getPersonDetails(id: String): Outcome<PersonDetails> = outcomeOf {

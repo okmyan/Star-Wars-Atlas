@@ -10,7 +10,8 @@ import androidx.room.Transaction
 @Dao
 interface PeopleDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    // We use Ignore strategy not to lose favorite people
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPeople(people: List<PersonEntity>)
 
     @Query("DELETE FROM people")
@@ -31,18 +32,26 @@ interface PeopleDao {
     @Query("DELETE FROM people_remote_keys")
     suspend fun deleteAllRemoteKeys()
 
+    @Query("SELECT id FROM people WHERE isFavorite = 1")
+    suspend fun getFavoriteIds(): List<String>
+
     @Transaction
     suspend fun upsert(
         people: List<PersonEntity>,
         keys: List<PeopleRemoteKeyEntity>,
         clearFirst: Boolean,
-    ) {
+        pendingFavoriteIds: Set<String>,
+    ): Set<String> {
+        val favoriteIds = if (clearFirst) getFavoriteIds().toSet() else pendingFavoriteIds
+        val markedPeople =
+            people.map { if (it.id in favoriteIds) it.copy(isFavorite = true) else it }
         if (clearFirst) {
             deleteAllPeople()
             deleteAllRemoteKeys()
         }
-        insertPeople(people)
+        insertPeople(markedPeople)
         insertRemoteKeys(keys)
+        return favoriteIds
     }
 
 }
