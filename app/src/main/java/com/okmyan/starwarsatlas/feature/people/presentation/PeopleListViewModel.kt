@@ -1,9 +1,8 @@
 package com.okmyan.starwarsatlas.feature.people.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.okmyan.starwarsatlas.core.presentation.BaseViewModel
 import com.okmyan.starwarsatlas.feature.people.data.PeopleRepository
 import com.okmyan.starwarsatlas.feature.people.domain.PersonListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,23 +19,23 @@ import javax.inject.Inject
 @HiltViewModel
 class PeopleListViewModel @Inject constructor(
     private val peopleRepository: PeopleRepository,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _showFavoritesOnly = MutableStateFlow(false)
     val showFavoritesOnly: StateFlow<Boolean> = _showFavoritesOnly.asStateFlow()
 
     val items: Flow<PagingData<PersonListItem>> = peopleRepository.getPeople()
-        .cachedIn(viewModelScope)
+        .cachedIn(scope)
 
     val favoritePeople: StateFlow<List<PersonListItem>> = peopleRepository.observeFavoritePeople()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(scope, SharingStarted.Eagerly, emptyList())
 
     fun toggleFavoriteFilter() {
         _showFavoritesOnly.value = !_showFavoritesOnly.value
     }
 
     fun toggleFavorite(personId: String) {
-        viewModelScope.launch(CoroutineName("PeopleListViewModel - toggleFavorite for $personId")) {
+        scope.launch(CoroutineName("PeopleListViewModel - toggleFavorite for $personId")) {
             peopleRepository.toggleFavorite(personId)
         }
     }

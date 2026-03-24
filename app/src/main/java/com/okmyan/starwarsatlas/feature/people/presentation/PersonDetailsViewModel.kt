@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.okmyan.starwarsatlas.app.navigation.PersonDetails
 import com.okmyan.starwarsatlas.core.model.Outcome
-import com.okmyan.starwarsatlas.core.presentation.BaseViewModel
+import com.okmyan.starwarsatlas.core.presentation.StatefulBaseViewModel
 import com.okmyan.starwarsatlas.feature.people.data.PeopleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineName
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class PersonDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: PeopleRepository,
-) : BaseViewModel<PersonDetailsState>(PersonDetailsState.Loading) {
+) : StatefulBaseViewModel<PersonDetailsState>(PersonDetailsState.Loading) {
 
     private val personId: String = savedStateHandle.toRoute<PersonDetails>().personId
 

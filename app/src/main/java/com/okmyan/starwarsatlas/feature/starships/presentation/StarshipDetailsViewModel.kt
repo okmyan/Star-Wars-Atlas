@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.okmyan.starwarsatlas.app.navigation.StarshipDetails
 import com.okmyan.starwarsatlas.core.model.Outcome
-import com.okmyan.starwarsatlas.core.presentation.BaseViewModel
+import com.okmyan.starwarsatlas.core.presentation.StatefulBaseViewModel
 import com.okmyan.starwarsatlas.feature.starships.data.StarshipsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineName
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class StarshipDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: StarshipsRepository,
-) : BaseViewModel<StarshipDetailsState>(StarshipDetailsState.Loading) {
+) : StatefulBaseViewModel<StarshipDetailsState>(StarshipDetailsState.Loading) {
 
     private val starshipId: String = savedStateHandle.toRoute<StarshipDetails>().starshipId
 
