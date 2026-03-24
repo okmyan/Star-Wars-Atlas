@@ -17,7 +17,7 @@ import com.okmyan.starwarsatlas.R
 fun DetailsTopBar(
     name: String?,
     onBack: () -> Unit,
-    actions: @Composable RowScope.() -> Unit = {},
+    actions: (@Composable RowScope.() -> Unit)? = null,
 ) {
     TopAppBar(
         title = {
@@ -31,6 +31,6 @@ fun DetailsTopBar(
                 )
             }
         },
-        actions = actions,
+        actions = actions ?: {},
     )
 }

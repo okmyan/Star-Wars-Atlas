@@ -39,26 +39,27 @@ fun PersonDetailsScreen(
             DetailsTopBar(
                 name = (uiState as? PersonDetailsState.Success)?.person?.name,
                 onBack = onBack,
-                actions = {
-                    IconToggleButton(
-                        checked = isFavorite,
-                        onCheckedChange = { viewModel.toggleFavorite() },
-                        enabled = uiState is PersonDetailsState.Success,
-                    ) {
-                        if (isFavorite) {
-                            Icon(
-                                imageVector = Icons.Filled.Star,
-                                contentDescription = stringResource(R.string.remove_from_favorites),
-                                tint = MaterialTheme.colorScheme.secondary,
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Outlined.StarOutline,
-                                contentDescription = stringResource(R.string.add_to_favorites),
-                            )
+                actions = if (uiState is PersonDetailsState.Success) {
+                    {
+                        IconToggleButton(
+                            checked = isFavorite,
+                            onCheckedChange = { viewModel.toggleFavorite() },
+                        ) {
+                            if (isFavorite) {
+                                Icon(
+                                    imageVector = Icons.Filled.Star,
+                                    contentDescription = stringResource(R.string.remove_from_favorites),
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarOutline,
+                                    contentDescription = stringResource(R.string.add_to_favorites),
+                                )
+                            }
                         }
                     }
-                },
+                } else null,
             )
         },
     ) { innerPadding ->
