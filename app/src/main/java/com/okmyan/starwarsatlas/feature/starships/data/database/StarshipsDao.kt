@@ -32,7 +32,7 @@ interface StarshipsDao {
     suspend fun deleteAllRemoteKeys()
 
     @Transaction
-    suspend fun upsert(
+    suspend fun save(
         starships: List<StarshipEntity>,
         keys: List<StarshipRemoteKeyEntity>,
         clearFirst: Boolean,
