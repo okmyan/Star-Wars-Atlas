@@ -9,6 +9,7 @@ import com.apollographql.apollo.ApolloClient
 import com.okmyan.starwarsatlas.core.datastore.LastRefreshDataStore
 import com.okmyan.starwarsatlas.core.model.Outcome
 import com.okmyan.starwarsatlas.feature.people.data.database.FavoritePeopleDao
+import com.okmyan.starwarsatlas.feature.people.data.database.FavoritePersonEntity
 import com.okmyan.starwarsatlas.feature.people.data.database.PeopleDao
 import com.okmyan.starwarsatlas.feature.people.domain.PersonDetails
 import com.okmyan.starwarsatlas.feature.people.domain.PersonListItem
@@ -55,15 +56,25 @@ class PeopleRepository @Inject constructor(
             }
         }
 
-    fun observeFavoriteById(id: String): Flow<Boolean> =
-        favoritePeopleDao.observeFavoriteById(id).map { it ?: false }
+    fun observeFavoriteById(id: String): Flow<Boolean> = favoritePeopleDao.observeFavoriteById(id)
 
     suspend fun toggleFavorite(id: String) {
-        val current = favoritePeopleDao.isFavorite(id) ?: run {
-            Timber.w("toggleFavorite: person with id=$id not found in database")
-            return
+        if (favoritePeopleDao.isFavorite(id)) {
+            favoritePeopleDao.delete(id)
+        } else {
+            val person = peopleDao.getById(id) ?: run {
+                Timber.w("toggleFavorite: person with id=$id not found in database")
+                return
+            }
+
+            favoritePeopleDao.insert(
+                FavoritePersonEntity(
+                    id = person.id,
+                    name = person.name,
+                    filmCount = person.filmCount,
+                )
+            )
         }
-        favoritePeopleDao.setFavorite(id, !current)
     }
 
     suspend fun getPersonDetails(id: String): Outcome<PersonDetails> = outcomeOf {

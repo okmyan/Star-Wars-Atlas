@@ -16,16 +16,12 @@ abstract class CursorRemoteMediator<Entity : Any>(
     private val featureKey: String,
 ) : RemoteMediator<Int, Entity>() {
 
-    override suspend fun initialize(): InitializeAction {
-        val lastRefresh = lastRefreshDataStore.getTimestamp(featureKey)
-            ?: return InitializeAction.LAUNCH_INITIAL_REFRESH
-
-        return if (System.currentTimeMillis() - lastRefresh < CACHE_TIMEOUT) {
-            InitializeAction.SKIP_INITIAL_REFRESH
-        } else {
+    override suspend fun initialize(): InitializeAction =
+        if (needToRefreshCache()) {
             InitializeAction.LAUNCH_INITIAL_REFRESH
+        } else {
+            InitializeAction.SKIP_INITIAL_REFRESH
         }
-    }
 
     override suspend fun load(
         loadType: LoadType,
@@ -40,7 +36,8 @@ abstract class CursorRemoteMediator<Entity : Any>(
                 val lastItem = state.lastItemOrNull()
                     ?: return MediatorResult.Success(endOfPaginationReached = getCount() == 0)
 
-                getNextCursor(lastItem) ?: return MediatorResult.Success(endOfPaginationReached = true)
+                getNextCursor(lastItem)
+                    ?: return MediatorResult.Success(endOfPaginationReached = true)
             }
         }
 
@@ -56,7 +53,11 @@ abstract class CursorRemoteMediator<Entity : Any>(
             }
             throw e
         }
-        save(items = page.items, nextCursor = page.nextCursor, clearFirst = loadType == LoadType.REFRESH)
+        save(
+            items = page.items,
+            nextCursor = page.nextCursor,
+            clearFirst = loadType == LoadType.REFRESH,
+        )
 
         if (loadType == LoadType.REFRESH) {
             lastRefreshDataStore.setTimestamp(featureKey, System.currentTimeMillis())
@@ -69,6 +70,11 @@ abstract class CursorRemoteMediator<Entity : Any>(
     abstract suspend fun getNextCursor(lastItem: Entity): String?
     abstract suspend fun fetch(pageSize: Int, cursor: String?): CursorPage<Entity>
     abstract suspend fun save(items: List<Entity>, nextCursor: String?, clearFirst: Boolean)
+
+    private suspend fun needToRefreshCache(): Boolean {
+        val lastRefresh = lastRefreshDataStore.getTimestamp(featureKey)
+        return lastRefresh == null || System.currentTimeMillis() - lastRefresh > CACHE_TIMEOUT
+    }
 
     companion object {
         private val CACHE_TIMEOUT = TimeUnit.HOURS.toMillis(1)

@@ -32,7 +32,7 @@ interface PlanetsDao {
     suspend fun deleteAllRemoteKeys()
 
     @Transaction
-    suspend fun upsert(
+    suspend fun save(
         planets: List<PlanetEntity>,
         keys: List<PlanetRemoteKeyEntity>,
         clearFirst: Boolean,

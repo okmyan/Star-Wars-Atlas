@@ -55,7 +55,7 @@ class StarshipsRemoteMediator(
 
     override suspend fun save(items: List<StarshipEntity>, nextCursor: String?, clearFirst: Boolean) {
         val remoteKeys = items.map { StarshipRemoteKeyEntity(id = it.id, nextCursor = nextCursor) }
-        starshipsDao.upsert(starships = items, keys = remoteKeys, clearFirst = clearFirst)
+        starshipsDao.save(starships = items, keys = remoteKeys, clearFirst = clearFirst)
     }
 
     companion object {

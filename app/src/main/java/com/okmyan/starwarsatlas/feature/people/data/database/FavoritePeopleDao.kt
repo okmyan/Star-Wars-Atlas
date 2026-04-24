@@ -1,22 +1,27 @@
 package com.okmyan.starwarsatlas.feature.people.data.database
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoritePeopleDao {
 
-    @Query("UPDATE people SET isFavorite = :isFavorite WHERE id = :id")
-    suspend fun setFavorite(id: String, isFavorite: Boolean)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(person: FavoritePersonEntity)
 
-    @Query("SELECT isFavorite FROM people WHERE id = :id")
-    suspend fun isFavorite(id: String): Boolean?
+    @Query("DELETE FROM favorite_people WHERE id = :id")
+    suspend fun delete(id: String)
 
-    @Query("SELECT isFavorite FROM people WHERE id = :id")
-    fun observeFavoriteById(id: String): Flow<Boolean?>
+    @Query("SELECT EXISTS(SELECT 1 FROM favorite_people WHERE id = :id)")
+    suspend fun isFavorite(id: String): Boolean
 
-    @Query("SELECT * FROM people WHERE isFavorite = 1 ORDER BY rowid ASC")
-    fun observeFavoritePeople(): Flow<List<PersonEntity>>
+    @Query("SELECT EXISTS(SELECT 1 FROM favorite_people WHERE id = :id)")
+    fun observeFavoriteById(id: String): Flow<Boolean>
+
+    @Query("SELECT * FROM favorite_people ORDER BY rowid ASC")
+    fun observeFavoritePeople(): Flow<List<FavoritePersonEntity>>
 
 }

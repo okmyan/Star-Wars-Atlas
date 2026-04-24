@@ -1,3 +1,9 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+
+# Local/personal files - do NOT commit
+/deploymentTargetSelector.xml
+/caches/
+/markdown.xml
+/AndroidProjectSystem.xml
