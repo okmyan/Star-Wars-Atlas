@@ -55,7 +55,7 @@ class PlanetsRemoteMediator(
 
     override suspend fun save(items: List<PlanetEntity>, nextCursor: String?, clearFirst: Boolean) {
         val remoteKeys = items.map { PlanetRemoteKeyEntity(id = it.id, nextCursor = nextCursor) }
-        planetsDao.upsert(planets = items, keys = remoteKeys, clearFirst = clearFirst)
+        planetsDao.save(planets = items, keys = remoteKeys, clearFirst = clearFirst)
     }
 
     companion object {

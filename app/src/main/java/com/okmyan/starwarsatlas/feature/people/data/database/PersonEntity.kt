@@ -8,5 +8,4 @@ data class PersonEntity(
     @PrimaryKey val id: String,
     val name: String,
     val filmCount: Int,
-    val isFavorite: Boolean = false,
 )
