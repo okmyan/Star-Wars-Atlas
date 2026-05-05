@@ -16,7 +16,7 @@ import javax.inject.Inject
 class StarshipDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: StarshipsRepository,
-) : StatefulBaseViewModel<StarshipDetailsState>(StarshipDetailsState.Loading) {
+) : StatefulBaseViewModel<StarshipDetailsState>(StarshipDetailsState()) {
 
     private val starshipId: String = savedStateHandle.toRoute<StarshipDetails>().starshipId
 
@@ -29,7 +29,7 @@ class StarshipDetailsViewModel @Inject constructor(
     private fun loadDetails() {
         Timber.d("Loading starship details for $starshipId")
 
-        updateState { StarshipDetailsState.Loading }
+        updateState { copy(isLoading = true, error = null) }
 
         scope.launch(CoroutineName("StarshipDetailsViewModel - loadDetails")) {
             val result = repository.getStarshipDetails(starshipId)
@@ -37,8 +37,16 @@ class StarshipDetailsViewModel @Inject constructor(
 
             updateState {
                 when (result) {
-                    is Outcome.Success -> StarshipDetailsState.Success(result.value)
-                    is Outcome.Failure -> StarshipDetailsState.Error(result.error)
+                    is Outcome.Success -> copy(
+                        isLoading = false,
+                        error = null,
+                        starship = result.value,
+                    )
+
+                    is Outcome.Failure -> copy(
+                        isLoading = false,
+                        error = result.error,
+                    )
                 }
             }
         }

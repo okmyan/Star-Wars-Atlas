@@ -37,21 +37,23 @@ fun PeopleListScreen(
     viewModel: PeopleListViewModel = hiltViewModel(),
     onPersonClick: (String) -> Unit,
 ) {
-    val showFavoritesOnly by viewModel.showFavoritesOnly.collectAsStateWithLifecycle()
     val pagingItems = viewModel.items.collectAsLazyPagingItems()
-    val favoritePeople by viewModel.favoritePeople.collectAsStateWithLifecycle()
-    val favoriteIds = remember(favoritePeople) { favoritePeople.mapTo(HashSet()) { it.id } }
+    val favoritePeopleState by viewModel.favoritePeopleState.collectAsStateWithLifecycle()
+    val favoriteIds = remember(favoritePeopleState.favoritePeople) {
+        favoritePeopleState.favoritePeople.mapTo(HashSet()) { it.id }
+    }
+
     val listState = rememberLazyListState()
 
     Column {
         FavoritesFilter(
-            selected = showFavoritesOnly,
+            selected = favoritePeopleState.showFavoritesOnly,
             onToggle = viewModel::toggleFavoriteFilter,
         )
 
-        if (showFavoritesOnly) {
+        if (favoritePeopleState.showFavoritesOnly) {
             FavoritePeopleContent(
-                people = favoritePeople,
+                people = favoritePeopleState.favoritePeople,
                 onFavoriteToggle = viewModel::toggleFavorite,
                 onPersonClick = onPersonClick,
             )
@@ -77,7 +79,7 @@ private fun FavoritesFilter(
             selected = selected,
             onClick = onToggle,
             label = { Text(stringResource(R.string.favorites_filter)) },
-            leadingIcon = { Icon(Icons.Filled.Star, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Filled.Star, contentDescription = stringResource(R.string.favorites_filter)) },
         )
     }
 }
@@ -101,7 +103,7 @@ private fun FavoritePeopleContent(
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(people, key = { it.id }) { person ->

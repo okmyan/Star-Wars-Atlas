@@ -27,26 +27,28 @@ fun StarshipDetailsScreen(
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            DetailsTopBar(
-                name = (uiState as? StarshipDetailsState.Success)?.starship?.name,
-                onBack = onBack,
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-        ) {
-            when (val state = uiState) {
-                is StarshipDetailsState.Loading -> Loading()
-                is StarshipDetailsState.Error -> ErrorContent(
-                    error = state.error,
-                    onRetry = viewModel::retry,
+    uiState.run {
+        Scaffold(
+            topBar = {
+                DetailsTopBar(
+                    name = starship?.name,
+                    onBack = onBack,
                 )
-                is StarshipDetailsState.Success -> StarshipDetailsContent(state.starship)
+            },
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+            ) {
+                when {
+                    isLoading -> Loading()
+                    error != null -> ErrorContent(
+                        error = error,
+                        onRetry = viewModel::retry,
+                    )
+                    starship != null -> StarshipDetailsContent(starship)
+                }
             }
         }
     }

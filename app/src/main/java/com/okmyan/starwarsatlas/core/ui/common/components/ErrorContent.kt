@@ -21,13 +21,8 @@ fun ErrorContent(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier.fillMaxSize(),
 ) {
-    val errorMessage = when (error) {
-        is DataError.NoInternetConnection -> stringResource(R.string.error_no_internet)
-        is DataError.Timeout -> stringResource(R.string.error_timeout)
+    val errorMessage = error.toStringResource()
 
-        is DataError.GraphQl,
-        is DataError.Unknown -> stringResource(R.string.error_generic)
-    }
     Column(
         modifier = modifier.padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
