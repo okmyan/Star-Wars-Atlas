@@ -34,11 +34,11 @@ Data is fetched from the public GraphQL API: `https://swapi-graphql.eskerda.verc
 
 | Area         | Library                                      |
 |--------------|----------------------------------------------|
-| Language     | Kotlin 2.3.20                                |
-| UI           | Jetpack Compose + Material3 (BOM 2026.03.01) |
+| Language     | Kotlin 2.3.21                                |
+| UI           | Jetpack Compose + Material3 (BOM 2026.04.01) |
 | Architecture | MVVM + Repository                            |
 | DI           | Hilt 2.59.2                                  |
-| Navigation   | Navigation Compose 2.9.7                     |
+| Navigation   | Navigation Compose 2.9.8                     |
 | Networking   | Apollo Client 4.4.3 (GraphQL)                |
 | Pagination   | Paging 3 (Runtime + Compose) 3.4.2           |
 | Local cache  | Room 2.8.4                                   |
