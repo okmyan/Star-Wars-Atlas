@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.androidx.room.paging)
     ksp(libs.androidx.room.compiler)
 
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.timber)
 
     testImplementation(libs.junit)

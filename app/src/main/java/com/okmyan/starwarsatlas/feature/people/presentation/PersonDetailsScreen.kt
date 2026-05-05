@@ -32,50 +32,51 @@ fun PersonDetailsScreen(
     onBack: () -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
-    val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            DetailsTopBar(
-                name = (uiState as? PersonDetailsState.Success)?.person?.name,
-                onBack = onBack,
-                actions = if (uiState is PersonDetailsState.Success) {
-                    {
-                        IconToggleButton(
-                            checked = isFavorite,
-                            onCheckedChange = { viewModel.toggleFavorite() },
-                        ) {
-                            if (isFavorite) {
-                                Icon(
-                                    imageVector = Icons.Filled.Star,
-                                    contentDescription = stringResource(R.string.remove_from_favorites),
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Outlined.StarOutline,
-                                    contentDescription = stringResource(R.string.add_to_favorites),
-                                )
+    uiState.run {
+        Scaffold(
+            topBar = {
+                DetailsTopBar(
+                    name = person?.name,
+                    onBack = onBack,
+                    actions = if (person != null) {
+                        {
+                            IconToggleButton(
+                                checked = isFavorite,
+                                onCheckedChange = { viewModel.toggleFavorite() },
+                            ) {
+                                if (isFavorite) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Star,
+                                        contentDescription = stringResource(R.string.remove_from_favorites),
+                                        tint = MaterialTheme.colorScheme.secondary,
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Outlined.StarOutline,
+                                        contentDescription = stringResource(R.string.add_to_favorites),
+                                    )
+                                }
                             }
                         }
-                    }
-                } else null,
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-        ) {
-            when (val state = uiState) {
-                is PersonDetailsState.Loading -> Loading()
-                is PersonDetailsState.Error -> ErrorContent(
-                    error = state.error,
-                    onRetry = viewModel::retry,
+                    } else null,
                 )
+            },
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+            ) {
+                when {
+                    isLoading -> Loading()
+                    error != null -> ErrorContent(
+                        error = error,
+                        onRetry = viewModel::retry,
+                    )
 
-                is PersonDetailsState.Success -> PersonDetailsContent(state.person)
+                    person != null -> PersonDetailsContent(person)
+                }
             }
         }
     }

@@ -8,9 +8,6 @@ import com.okmyan.starwarsatlas.core.presentation.StatefulBaseViewModel
 import com.okmyan.starwarsatlas.feature.people.data.PeopleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,14 +16,12 @@ import javax.inject.Inject
 class PersonDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: PeopleRepository,
-) : StatefulBaseViewModel<PersonDetailsState>(PersonDetailsState.Loading) {
+) : StatefulBaseViewModel<PersonDetailsState>(PersonDetailsState()) {
 
     private val personId: String = savedStateHandle.toRoute<PersonDetails>().personId
 
-    val isFavorite: StateFlow<Boolean> = repository.observeFavoriteById(personId)
-        .stateIn(scope, SharingStarted.Eagerly, false)
-
     init {
+        observeFavorite()
         loadDetails()
     }
 
@@ -38,19 +33,35 @@ class PersonDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun observeFavorite() {
+        scope.launch(CoroutineName("PersonDetailsViewModel - observeFavorite by $personId")) {
+            repository.observeFavoriteById(personId).collect { isFavorite ->
+                updateState { copy(isFavorite = isFavorite) }
+            }
+        }
+    }
+
     private fun loadDetails() {
         Timber.d("Loading person details for $personId")
 
-        updateState { PersonDetailsState.Loading }
+        updateState { copy(isLoading = true, error = null) }
 
-        scope.launch(CoroutineName("PersonDetailsViewModel - loadDetails")) {
-            val result = repository.getPersonDetails(personId)
-            Timber.d("Person details loaded: $result")
+        scope.launch(CoroutineName("PersonDetailsViewModel - loadDetails for $personId")) {
+            val personDetails = repository.getPersonDetails(personId)
+            Timber.d("Person details loaded: $personDetails")
 
             updateState {
-                when (result) {
-                    is Outcome.Success -> PersonDetailsState.Success(result.value)
-                    is Outcome.Failure -> PersonDetailsState.Error(result.error)
+                when (personDetails) {
+                    is Outcome.Success -> copy(
+                        person = personDetails.value,
+                        isLoading = false,
+                        error = null,
+                    )
+
+                    is Outcome.Failure -> copy(
+                        isLoading = false,
+                        error = personDetails.error,
+                    )
                 }
             }
         }

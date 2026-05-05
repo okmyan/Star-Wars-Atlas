@@ -31,27 +31,32 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.okmyan.starwarsatlas.R
 import com.okmyan.starwarsatlas.core.ui.common.components.CatalogPagingScreen
 import com.okmyan.starwarsatlas.feature.people.domain.PersonListItem
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.toImmutableSet
 
 @Composable
 fun PeopleListScreen(
     viewModel: PeopleListViewModel = hiltViewModel(),
     onPersonClick: (String) -> Unit,
 ) {
-    val showFavoritesOnly by viewModel.showFavoritesOnly.collectAsStateWithLifecycle()
     val pagingItems = viewModel.items.collectAsLazyPagingItems()
-    val favoritePeople by viewModel.favoritePeople.collectAsStateWithLifecycle()
-    val favoriteIds = remember(favoritePeople) { favoritePeople.mapTo(HashSet()) { it.id } }
+    val favoritePeopleState by viewModel.favoritePeopleState.collectAsStateWithLifecycle()
+    val favoriteIds = remember(favoritePeopleState.favoritePeople) {
+        favoritePeopleState.favoritePeople.map { it.id }.toImmutableSet()
+    }
+
     val listState = rememberLazyListState()
 
     Column {
         FavoritesFilter(
-            selected = showFavoritesOnly,
+            selected = favoritePeopleState.showFavoritesOnly,
             onToggle = viewModel::toggleFavoriteFilter,
         )
 
-        if (showFavoritesOnly) {
+        if (favoritePeopleState.showFavoritesOnly) {
             FavoritePeopleContent(
-                people = favoritePeople,
+                people = favoritePeopleState.favoritePeople,
                 onFavoriteToggle = viewModel::toggleFavorite,
                 onPersonClick = onPersonClick,
             )
@@ -77,14 +82,14 @@ private fun FavoritesFilter(
             selected = selected,
             onClick = onToggle,
             label = { Text(stringResource(R.string.favorites_filter)) },
-            leadingIcon = { Icon(Icons.Filled.Star, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Filled.Star, contentDescription = stringResource(R.string.favorites_filter)) },
         )
     }
 }
 
 @Composable
 private fun FavoritePeopleContent(
-    people: List<PersonListItem>,
+    people: ImmutableList<PersonListItem>,
     onFavoriteToggle: (String) -> Unit,
     onPersonClick: (String) -> Unit,
 ) {
@@ -101,7 +106,7 @@ private fun FavoritePeopleContent(
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(people, key = { it.id }) { person ->
@@ -120,7 +125,7 @@ private fun FavoritePeopleContent(
 @Composable
 private fun PeoplePagingContent(
     pagingItems: LazyPagingItems<PersonListItem>,
-    favoriteIds: Set<String>,
+    favoriteIds: ImmutableSet<String>,
     listState: LazyListState,
     onFavoriteToggle: (String) -> Unit,
     onPersonClick: (String) -> Unit,

@@ -27,27 +27,28 @@ fun PlanetDetailsScreen(
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            DetailsTopBar(
-                name = (uiState as? PlanetDetailsState.Success)?.planet?.name,
-                onBack = onBack,
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-        ) {
-            when (val state = uiState) {
-                is PlanetDetailsState.Loading -> Loading()
-                is PlanetDetailsState.Error -> ErrorContent(
-                    error = state.error,
-                    onRetry = viewModel::retry,
+    uiState.run {
+        Scaffold(
+            topBar = {
+                DetailsTopBar(
+                    name = planet?.name,
+                    onBack = onBack,
                 )
-
-                is PlanetDetailsState.Success -> PlanetDetailsContent(state.planet)
+            },
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+            ) {
+                when {
+                    isLoading -> Loading()
+                    error != null -> ErrorContent(
+                        error = error,
+                        onRetry = viewModel::retry,
+                    )
+                    planet != null -> PlanetDetailsContent(planet)
+                }
             }
         }
     }

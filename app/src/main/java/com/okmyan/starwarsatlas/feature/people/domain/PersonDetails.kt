@@ -1,5 +1,7 @@
 package com.okmyan.starwarsatlas.feature.people.domain
 
+import kotlinx.collections.immutable.ImmutableList
+
 data class PersonDetails(
     val name: String?,
     val birthYear: String?,
@@ -10,5 +12,5 @@ data class PersonDetails(
     val hairColor: String?,
     val skinColor: String?,
     val homeworld: String?,
-    val films: List<String>,
+    val films: ImmutableList<String>,
 )

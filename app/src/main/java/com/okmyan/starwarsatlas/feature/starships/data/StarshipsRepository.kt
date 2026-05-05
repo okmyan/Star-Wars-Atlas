@@ -17,6 +17,7 @@ import com.okmyan.starwarsatlas.utils.outcomeOf
 import com.okmyan.starwarsatlas.utils.requireData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 
 class StarshipsRepository @Inject constructor(
@@ -50,7 +51,7 @@ class StarshipsRepository @Inject constructor(
                 name = name,
                 model = model,
                 starshipClass = starshipClass,
-                manufacturers = manufacturers.orEmpty().filterNotNull(),
+                manufacturers = manufacturers.orEmpty().filterNotNull().toImmutableList(),
                 costInCredits = costInCredits,
                 length = length,
                 crew = crew,
@@ -60,8 +61,10 @@ class StarshipsRepository @Inject constructor(
                 mglt = MGLT,
                 cargoCapacity = cargoCapacity,
                 consumables = consumables,
-                pilots = pilotConnection?.pilots.orEmpty().filterNotNull().mapNotNull { it.name },
-                films = filmConnection?.films.orEmpty().filterNotNull().mapNotNull { it.title },
+                pilots = pilotConnection?.pilots.orEmpty().filterNotNull().mapNotNull { it.name }
+                    .toImmutableList(),
+                films = filmConnection?.films.orEmpty().filterNotNull().mapNotNull { it.title }
+                    .toImmutableList(),
             )
         } ?: error("Starship not found")
     }

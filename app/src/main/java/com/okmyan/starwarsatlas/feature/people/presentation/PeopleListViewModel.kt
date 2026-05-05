@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,13 +23,19 @@ class PeopleListViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _showFavoritesOnly = MutableStateFlow(false)
-    val showFavoritesOnly: StateFlow<Boolean> = _showFavoritesOnly.asStateFlow()
 
     val items: Flow<PagingData<PersonListItem>> = peopleRepository.getPeople()
         .cachedIn(scope)
 
-    val favoritePeople: StateFlow<List<PersonListItem>> = peopleRepository.observeFavoritePeople()
-        .stateIn(scope, SharingStarted.Eagerly, emptyList())
+    val favoritePeopleState: StateFlow<FavoritePeopleListState> = combine(
+        _showFavoritesOnly,
+        peopleRepository.observeFavoritePeople(),
+    ) { showFavoritesOnly, favoritePeople ->
+        FavoritePeopleListState(
+            showFavoritesOnly = showFavoritesOnly,
+            favoritePeople = favoritePeople.toImmutableList(),
+        )
+    }.stateIn(scope, SharingStarted.Eagerly, FavoritePeopleListState())
 
     fun toggleFavoriteFilter() {
         _showFavoritesOnly.value = !_showFavoritesOnly.value

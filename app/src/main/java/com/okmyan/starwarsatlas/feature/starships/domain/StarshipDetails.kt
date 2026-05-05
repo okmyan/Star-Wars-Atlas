@@ -1,10 +1,12 @@
 package com.okmyan.starwarsatlas.feature.starships.domain
 
+import kotlinx.collections.immutable.ImmutableList
+
 data class StarshipDetails(
     val name: String?,
     val model: String?,
     val starshipClass: String?,
-    val manufacturers: List<String>,
+    val manufacturers: ImmutableList<String>,
     val costInCredits: Double?,
     val length: Double?,
     val crew: String?,
@@ -14,6 +16,6 @@ data class StarshipDetails(
     val mglt: Int?,
     val cargoCapacity: Double?,
     val consumables: String?,
-    val pilots: List<String>,
-    val films: List<String>,
+    val pilots: ImmutableList<String>,
+    val films: ImmutableList<String>,
 )
