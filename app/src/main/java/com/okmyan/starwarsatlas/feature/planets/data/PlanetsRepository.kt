@@ -17,6 +17,7 @@ import com.okmyan.starwarsatlas.utils.outcomeOf
 import com.okmyan.starwarsatlas.utils.requireData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 
 class PlanetsRepository @Inject constructor(
@@ -53,12 +54,14 @@ class PlanetsRepository @Inject constructor(
                 orbitalPeriod = orbitalPeriod,
                 gravity = gravity,
                 population = population,
-                climates = climates.orEmpty().filterNotNull(),
-                terrains = terrains.orEmpty().filterNotNull(),
+                climates = climates.orEmpty().filterNotNull().toImmutableList(),
+                terrains = terrains.orEmpty().filterNotNull().toImmutableList(),
                 surfaceWater = surfaceWater,
-                films = filmConnection?.films.orEmpty().filterNotNull().mapNotNull { it.title },
+                films = filmConnection?.films.orEmpty().filterNotNull().mapNotNull { it.title }
+                    .toImmutableList(),
                 residents = residentConnection?.residents.orEmpty().filterNotNull()
-                    .mapNotNull { it.name },
+                    .mapNotNull { it.name }
+                    .toImmutableList(),
             )
         } ?: error("Planet not found")
     }

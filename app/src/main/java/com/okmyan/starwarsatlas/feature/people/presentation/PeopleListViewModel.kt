@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +33,7 @@ class PeopleListViewModel @Inject constructor(
     ) { showFavoritesOnly, favoritePeople ->
         FavoritePeopleListState(
             showFavoritesOnly = showFavoritesOnly,
-            favoritePeople = favoritePeople,
+            favoritePeople = favoritePeople.toImmutableList(),
         )
     }.stateIn(scope, SharingStarted.Eagerly, FavoritePeopleListState())
 

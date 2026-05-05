@@ -19,6 +19,7 @@ import com.okmyan.starwarsatlas.utils.outcomeOf
 import com.okmyan.starwarsatlas.utils.requireData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.collections.immutable.toImmutableList
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -93,7 +94,8 @@ class PeopleRepository @Inject constructor(
                 hairColor = hairColor,
                 skinColor = skinColor,
                 homeworld = homeworld?.name,
-                films = filmConnection?.films.orEmpty().filterNotNull().mapNotNull { it.title },
+                films = filmConnection?.films.orEmpty().filterNotNull().mapNotNull { it.title }
+                    .toImmutableList(),
             )
         } ?: error("Person not found")
     }

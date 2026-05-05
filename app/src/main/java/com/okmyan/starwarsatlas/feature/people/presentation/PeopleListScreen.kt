@@ -31,6 +31,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.okmyan.starwarsatlas.R
 import com.okmyan.starwarsatlas.core.ui.common.components.CatalogPagingScreen
 import com.okmyan.starwarsatlas.feature.people.domain.PersonListItem
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.toImmutableSet
 
 @Composable
 fun PeopleListScreen(
@@ -40,7 +43,7 @@ fun PeopleListScreen(
     val pagingItems = viewModel.items.collectAsLazyPagingItems()
     val favoritePeopleState by viewModel.favoritePeopleState.collectAsStateWithLifecycle()
     val favoriteIds = remember(favoritePeopleState.favoritePeople) {
-        favoritePeopleState.favoritePeople.mapTo(HashSet()) { it.id }
+        favoritePeopleState.favoritePeople.map { it.id }.toImmutableSet()
     }
 
     val listState = rememberLazyListState()
@@ -86,7 +89,7 @@ private fun FavoritesFilter(
 
 @Composable
 private fun FavoritePeopleContent(
-    people: List<PersonListItem>,
+    people: ImmutableList<PersonListItem>,
     onFavoriteToggle: (String) -> Unit,
     onPersonClick: (String) -> Unit,
 ) {
@@ -122,7 +125,7 @@ private fun FavoritePeopleContent(
 @Composable
 private fun PeoplePagingContent(
     pagingItems: LazyPagingItems<PersonListItem>,
-    favoriteIds: Set<String>,
+    favoriteIds: ImmutableSet<String>,
     listState: LazyListState,
     onFavoriteToggle: (String) -> Unit,
     onPersonClick: (String) -> Unit,
